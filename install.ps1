@@ -5,7 +5,7 @@ $scriptFullPathNameExt=$MyInvocation.MyCommand.Definition
 $scriptName = [System.IO.Path]::GetFileNameWithoutExtension($scriptFullPathNameExt)
 $global:scriptNameExt = [System.IO.Path]::GetFileName($scriptFullPathNameExt)
 $global:scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$Version="20260526.1600"    
+$version="20260602-1700"
 #$global:FileLog=$env:TEMP+"\"+$scriptName+".log"
 #$LibFile="${scriptDirectory}\${scriptName}.psm1"    
 #if (-not(Test-Path -Path $LibFile -PathType Leaf))
@@ -54,8 +54,8 @@ Copy-Item -Path $scriptDirectory'\Shutdown.ps1'   -Destination $AppPath -force  
 Copy-Item -Path $scriptDirectory'\Shutdown.psm1'  -Destination $AppPath -force  # copy scripts
 Copy-Item -Path $scriptDirectory'\ShutdownWarningDeskTop.ps1'  -Destination $AppPath -force  # copy scripts
 
-& $scriptDirectory'\setCrystalDiskInfo_to_Scheduler.ps1' # run script to make task in scheduler
-& $scriptDirectory'\setShutdown_to_Scheduler.ps1' -Script  $AppPath'\Shutdown.ps1' # run script to make task in scheduler
+& $scriptDirectory'\addCrystalDiskInfo_in_Scheduler.ps1' # run script to make task in scheduler
+& $scriptDirectory'\addShutdown_in_Scheduler.ps1' -Script  $AppPath'\Shutdown.ps1' # run script to make task in scheduler
 
 Write-Host "Finished" 
 return 

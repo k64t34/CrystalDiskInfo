@@ -1,7 +1,7 @@
 ﻿New-Variable -name "ShutdownLib" -value "20260528-1544"
 function Now {return $(Get-Date -Format  "dd.MM.yyyy HH:mm:ss")} 
 function Shutdown(){Write-Log " Shutdown" 
-#& $env:systemroot\system32\shutdown.exe /s /t 60
+& $env:systemroot\system32\shutdown.exe /s /t 60
 }
 #********************************************************************
 function showShutdownWarningToUserDeskTop() {

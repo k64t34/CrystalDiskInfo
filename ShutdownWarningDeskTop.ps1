@@ -1,4 +1,5 @@
 ﻿#Start-Transcript -Path "c:\Program Files\CrystalDiskInfo\script_debug.txt" -Append -Force
+#$version="20260602-1700"
 function Now {return $(Get-Date -Format  "dd.MM.yyyy HH:mm:ss")} 
 #********************************************************************
 function ShutdownWarningDeskTop() {
@@ -121,7 +122,7 @@ if ($(ShutdownWarningDeskTop) -eq 'Cancel'){
 	}
 else {			
 	[System.IO.File]::AppendAllText($FileLog," $(Now) Timeout. Shutdown`r`n")
-	#& $env:systemroot\system32\shutdown.exe /s /t 60
+	& $env:systemroot\system32\shutdown.exe /s /t 60
 	}	
 			
 #Stop-Transcript			

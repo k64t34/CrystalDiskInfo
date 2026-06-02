@@ -1,5 +1,5 @@
 ﻿Start-Transcript -Path "c:\Program Files\CrystalDiskInfo\script_debug.txt" -Append -Force
-$version="20260528-1530"
+$version="20260602-1700"
 $scriptFullPathNameExt=$MyInvocation.MyCommand.Definition 
 $scriptName = [System.IO.Path]::GetFileNameWithoutExtension($scriptFullPathNameExt)
 $global:scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Definition

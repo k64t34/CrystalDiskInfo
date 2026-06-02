@@ -5,7 +5,7 @@
 $OutputEncoding = [System.Text.Encoding]::UTF8
 chcp 65001 | Out-Null
 
-$version="20260521-1000"
+$version="20260602-1700"
 $scriptFullPathNameExt=$MyInvocation.MyCommand.Definition 
 $scriptName = [System.IO.Path]::GetFileNameWithoutExtension($scriptFullPathNameExt)
 $Host.UI.RawUI.WindowTitle = "Set Crystal Disk Info scheduler"
