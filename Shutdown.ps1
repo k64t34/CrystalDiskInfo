@@ -1,17 +1,17 @@
 ﻿Start-Transcript -Path "c:\Program Files\CrystalDiskInfo\script_debug.txt" -Append -Force
 $version="20260602-1700"
 $scriptFullPathNameExt=$MyInvocation.MyCommand.Definition 
-$scriptName = [System.IO.Path]::GetFileNameWithoutExtension($scriptFullPathNameExt)
+$global:scriptName = [System.IO.Path]::GetFileNameWithoutExtension($scriptFullPathNameExt)
 $global:scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $MutexName = "Global\MyUniqueScript_" + (Get-FileHash $MyInvocation.MyCommand.Path).Hash
 try {
     $Mutex = [System.Threading.Mutex]::OpenExisting($MutexName)
     Write-Host "Другой экземпляр скрипта уже запущен"
     exit
-} catch {
-    # Mutex не найден — создаём его
-    $Mutex = New-Object System.Threading.Mutex($false, $MutexName)
-}
+	}
+catch {    
+    $Mutex = New-Object System.Threading.Mutex($false, $MutexName) # Mutex не найден — создаём его
+	}
 try {
 $LibFile="${scriptDirectory}\${scriptName}.psm1"    
     if (-not(Test-Path -Path $LibFile -PathType Leaf))
@@ -29,7 +29,7 @@ Write-Host "*********************************************************" -Foregrou
 Write-Host $scriptFullPathNameExt -ForegroundColor Gray
 Write-Host 
 $FolderScript = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-$global:FileLog = Join-Path -Path $FolderScript -ChildPath "log.txt"
+Start-Log $(Join-Path -Path $scriptDirectory -ChildPath "log.txt")
 Write-Log "Shutdown request." -NoNewline #[System.IO.File]::AppendAllText($logFilePath,"`r`n$(Now) Shutdown request.") 
 
 $UserSessionStatus=$(GetUserSessionStatus)

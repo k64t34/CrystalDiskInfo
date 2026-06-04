@@ -279,10 +279,10 @@ else { $result='WTSDisconnected'
 		if ($session.State -eq 'WTSActive')
 			{								
 			if ($(isLockScreen)) {
-				Write-Host "Экран заблокирован (LockScreen active)"
+				#Write-Host "Экран заблокирован (LockScreen active)"
 				$result='WTSDisconnected'
 			} else {
-				Write-Host "Пользователь работает в рабочем столе"
+				#Write-Host "Пользователь работает в рабочем столе"
 				$result='WTSActive'
 			}
 			break	
@@ -322,6 +322,40 @@ if ($logonUiInSession) {
 	}
 }
 #********************************************************************
+$global:FileLog
+function Start-Log() { #1. Определяет $global:FileLog, 2. Создает файл log, если еще нет и пишет первую строку datatime Log-file created,3. Проверяет, что в конце файла есть перевод строки  
+[CmdletBinding()]
+    param(
+        [Parameter(Position=0,ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
+        [String]$FileLog
+	)		
+if ( [string]::IsNullOrWhiteSpace($global:FileLog))
+	{	
+	
+	if ([string]::IsNullOrWhiteSpace($local:FileLog)) {
+		$global:FileLog = [System.IO.Path]::ChangeExtension($MyInvocation.ScriptName, '.log')		
+		}
+	else
+		{	
+		$global:FileLog	= $local:FileLog
+		}
+	}	
+if (-not (Test-Path -LiteralPath $global:FileLog -PathType Leaf )) 
+	{	Write-Log 'Log-file created'}
+else 
+	{		
+	$fs = [System.IO.File]::Open($global:FileLog, 'Open', 'Read', 'ReadWrite')
+	try {
+		if ($fs.Length -ge 3)
+			{			
+			$fs.Seek(-2, [System.IO.SeekOrigin]::End) | Out-Null
+			$b1 = $fs.ReadByte() ; 	$b2 = $fs.ReadByte()
+			if ($b1 -ne 0x0D -or $b2 -ne 0x0A) {Write-Output '`r`n'  | Out-File -FilePath $FileLog -Append  -Encoding UTF8}
+			}
+		}
+	finally {$fs.Dispose()}
+	}
+}
 $global:FileLogNoNewline=$false
 function Write-Log () {
 #********************************************************************	
@@ -332,10 +366,10 @@ function Write-Log () {
     
         [Parameter()]
         [switch]$NoNewline    
-    )
+    )	
     #Write-Output "global:FileLogNoNewline=$global:FileLogNoNewline NoNewline=$NoNewline"  | Out-File -FilePath $FileLog -Append  -Encoding UTF8 
-    if (!$global:FileLogNoNewline) {Write-Output "$(Now) "  | Out-File -FilePath $FileLog -Append  -Encoding UTF8 -NoNewline }
-    Write-Output $LogText  | Out-File -FilePath $FileLog -Append  -Encoding UTF8 -NoNewline:$NoNewline
+    if (!$global:FileLogNoNewline) {Write-Output "$(Now) "  | Out-File -FilePath $global:FileLog -Append  -Encoding UTF8 -NoNewline }
+    Write-Output $LogText  | Out-File -FilePath $global:FileLog -Append  -Encoding UTF8 -NoNewline:$NoNewline
     $global:FileLogNoNewline=$NoNewline
 }
 #********************************************************************
